@@ -1,0 +1,7 @@
+Tool for screen shot both in Android and Linux PC.
+
+Android:
+Make sure you have jpeg and png lib under $android/external/
+
+Linux
+sudo apt-get install libjpeg-dev
