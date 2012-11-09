@@ -1,0 +1,28 @@
+当遇到一个函数被多个函数调用，而你想知道是被哪个函数调用后出现问题的时候，一种办法是在众多函数中打印log去验证，颇为费时；而下面的办法是让你只需要加一句代码就可以找到整个函数的调用栈
+比如
+
+public void userActivity(long time, boolean noChangeLights, int eventType, boolean force) {
+    //mContext.enforceCallingOrSelfPermission(android.Manifest.permission.DEVICE_POWER, null);
+
+    (new Exception()).printStackTrace();
+
+    if (((mPokey & POKE_LOCK_IGNORE_CHEEK_EVENTS) != 0)
+            && (eventType == CHEEK_EVENT || eventType == TOUCH_EVENT)) {
+        if (false) {
+            Log.d(TAG, "dropping cheek or short event mPokey=0x" + Integer.toHexString(mPokey));
+        }
+        return;
+    }
+}
+
+userActivity被多个函数调用，我希望知道在出问题的时候它的函数调用栈，于是在函数入口加上 (new Exception()).printStackTrace(); 这句代码就ok了，具体运行的时候，会打印出如下调用关系：
+    W/System.err( 1986): java.lang.Exception
+    W/System.err( 1986): at com.android.server.PowerManagerService.userActivity(PowerManagerService.java:1888)
+    W/System.err( 1986): at com.android.server.WindowManagerService.wakeupIfNeeded(WindowManagerService.java:4937)
+    W/System.err( 1986): at com.android.server.WindowManagerService.access$900(WindowManagerService.java:145)
+    W/System.err( 1986): at com.android.server.WindowManagerService$KeyWaiter.findTargetWindow(WindowManagerService.java:5843)
+    W/System.err( 1986): at com.android.server.WindowManagerService$KeyWaiter.waitForNextEventTarget(WindowManagerService.java:5633)
+    W/System.err( 1986): at com.android.server.WindowManagerService.dispatchKey(WindowManagerService.java:5316)
+    W/System.err( 1986): at com.android.server.WindowManagerService.access$1100(WindowManagerService.java:145)
+    W/System.err( 1986): at com.android.server.WindowManagerService$InputDispatcherThread.process(WindowManagerService.java:6559)
+    W/System.err( 1986): at com.android.server.WindowManagerService$InputDispatcherThread.run(WindowManagerService.java:6439)

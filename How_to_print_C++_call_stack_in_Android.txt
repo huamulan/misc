@@ -1,0 +1,12 @@
+How to print C++ call stack in Android
+
+1. Modify source code:
+#include <utils/CallStack.h>
+
+// Insert following code to where you want print backtrace 
+android::CallStack stack;
+stack.update();
+stack.dump("This is error\!");
+
+2. Modify Android.mk:
+LOCAL_SHARED_LIBRARIES+= libutils
