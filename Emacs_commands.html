@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>Emacs commands</title>
+    <meta name="author" content="nacho4d">
+    <meta name="generator" content="iA Writer for Mac 1.3.1">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <style type="text/css">
+      body { color: #222; font: normal normal 400 100%/1.5em georgia,serif; margin: 3em auto; width: 40em }
+      a:link { color: #3366CC }
+      a:visited { color: #224488 }
+      blockquote,ol,p,ul { display: block; margin: 0 0 1.5em }
+      blockquote { border-left: solid .1em #E4E4E4; color: #919191; padding: 0 1.5em 0 1.4em }
+      code { font: normal normal 87.5%/1.71428571em monospace,sans-serif }
+      img { display: block; margin: 1.5em auto }
+      pre { display: block; font: normal normal 87.5%/1.71428571em monospace,sans-serif; margin: 1.71428571em }
+      h1,h2,h3,h4,h5,h6 { font-weight: 400 }
+      h1 { font-size: 225%; line-height: 1.3334em; margin: 0 0 .1666em }
+      h2 { font-size: 175%; line-height: 1.28571429em; margin: 0 0 .35714286em }
+      h3 { font-size: 137.5%; line-height: 1.3636em; margin: 0 0 .5em }
+      h4,h5,h6 { font-size: 112.5%; line-height: 1.3334em; margin: 0 0 .7778em }
+      ol,ul { list-style-position: outside; padding: 0 }
+      ol ol,ol ul,ul ol,ul ul { margin: 0 0 .75em 2em }
+      table { border-collapse: collapse; margin: 1.5em 0; width: 100% }
+      td,th { border: solid .1em #000; font-family: sans-serif; font-size: 87.5%; line-height: 1.71428571em; text-align: center }
+      kbd { border: 1px solid #ccc; /*-moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;*/ color:#000000; padding:0px 3px 0px 3px; white-space:nowrap; }
+    </style>
+  </head>
+  <body>
+
+<h2>Prefix commands:</h2>
+  <ul>
+    <li><kbd>C</kbd>-<kbd>x</kbd> Mainly used for file, buffer and window manipulation</li>
+    <li><kbd>C</kbd>-<kbd>c</kbd> Usually particular to a mode or context</li>
+    <li><kbd>C</kbd>-<kbd>h</kbd> Mainly used for help commands</li>
+  </ul>
+
+<h2>Some definitions</h2>
+  <ul>
+    <li><b>File</b>: The real file in the file system.</li>
+    <li><b>Buffer</b>: Internal chunk of data. Usually points (visits) a file.</li>
+    <li><b>Window</b>: View of the buffer. Screen can be split into several windows.</li>
+  </ul>
+
+<h2>Manipulating files</h2>
+  <ul>
+    <li><kbd>C</kbd>-<kbd>x</kbd> <kbd>C</kbd>-<kbd>f</kbd> <code>find-file</code>: Opens a file and change current window to it.</li>
+    <li><kbd>C</kbd>-<kbd>x</kbd> <kbd>C</kbd>-<kbd>s</kbd> <code>save-buffer</code>: Writes current buffer to disk.</li>
+    <li><kbd>C</kbd>-<kbd>x</kbd> <kbd>k</kbd> <code>kill-buffer</code>: Prompts for a buffer and kills it. Writing of unsaved changes is optional.</li>
+ </ul>
+
+<h2>Manipulating Buffers</h2>
+  <ul>
+    <li><kbd>C</kbd>-<kbd>x</kbd> <kbd>b</kbd> <code>switch-to-buffer</code>: Prompts and switch to a buffer in the same window(It can be a new buffer).</li>
+    <li><kbd>C</kbd>-<kbd>x</kbd> <kbd>C</kbd>-<kbd>b</kbd> <code>list-buffers</code>: Lists buffers with some properties like name, modified date, size, etc.</li>
+    <li><kbd>C</kbd>-<kbd>x</kbd> <kbd>k</kbd> <code>kill-buffer</code>: Prompts for a buffer and kills it. Unsaved changes writing are optional.</li>
+    <li><kbd>C</kbd>-<kbd>x</kbd> <kbd>C</kbd>-<kbd>q</kbd> <code>vc-toggle-read-only</code> Toggles between read-only and read-write mode. If the file is version controlled it is checked out for you.</li>
+  </ul>
+
+<h2>Manipulating Windows</h2>
+  <ul>
+    <li><kbd>C</kbd>-<kbd>v</kbd> <code>scroll-down</code>: Scroll down one screen.</li>
+    <li><kbd>M</kbd>-<kbd>v</kbd> <code>scroll-up</code>: Scrolls up one screen (opposite of <code>scroll-up</code>).</li>
+    <li><kbd>C</kbd>-<kbd>x</kbd> <kbd>o</kbd> <code>other-window</code>: Changes to other window.</li>
+    <li><kbd>C</kbd>-<kbd>x</kbd> <kbd>0</kbd> <code>delete-window</code>: Delete current window.</li>
+    <li><kbd>C</kbd>-<kbd>x</kbd> <kbd>1</kbd> <code>delete-other-windows</code>: Delete other windows.</li>
+    <li><kbd>C</kbd>-<kbd>x</kbd> <kbd>2</kbd> <code>split-window-vertically</code>: Splits current window in two vertically.</li>
+    <li><kbd>C</kbd>-<kbd>x</kbd> <kbd>3</kbd> <code>split-window-horizontally</code>: Splits current window in two horizontally.</li>
+    <li><kbd>C</kbd>-<kbd>M</kbd>-<kbd>v</kbd> <code>scroll-other-window</code>: scroll other window (the one that <code>other-window</code> will change to).</li>
+  </ul>
+
+<h2>More basics</h2>
+  <ul>
+    <li>To enter : emacs</li>
+    <li>To enter with a buffer: emacs file.ext</li>
+    <li>To exit : <kbd>C</kbd>-<kbd>x</kbd> <kbd>C</kbd>-<kbd>c</kbd> <code>save-buffer-kill-emacs</code></li>
+  </ul>
+
+<h2>The screen</h2>
+  
+  <h3>The mode line</h3>
+    <p>Located at the bottom, in reverse video.</p>
+    <p>Shows info about</p>
+    <ul>
+      <li>The state of the buffer: <em>modified</em>, <s>unmodified</s> or %read-only%.</li>
+      <li>The name of the buffer, the visible amount or its content offset in percentage.</li>
+   </ul>
+
+  <h3>The minibuffer</h3>
+    <p>Used by emacs to show messages, also called echo-line.</p>
+    <p>Sometimes it shows random messages of what Emacs is doing, if you encounter in the situation that it prompts you something you don't know you can always press:</p>
+    <ul>
+      <li><kbd>C</kbd>-<kbd>g</kbd> <code>keyboard-quit</code> to leave that prompt.</li>
+    </ul>
+
+<h2>Help</h2>
+  <ul>
+    <li><kbd>C</kbd>-<kbd>h</kbd> : Default prefix for help. Type <kbd>C</kbd>-h <kbd>C</kbd>-h for a list of commands.</li>
+    <li><kbd>C</kbd>-<kbd>h</kbd> t : Runs the tutorial, good for beginners.</li>
+    <li><kbd>C</kbd>-<kbd>h</kbd> i : Info. Enters the built in Info hypertext documentation reader.</li>
+  </ul>
+
+<h2>Infinite Undo</h2>
+  <ul>
+    <li><kbd>C</kbd>-<kbd>_</kbd> or <kbd>C</kbd>-<kbd>x</kbd> <kbd>u</kbd> : Undo</li>
+    <li>TODO : Redo</li>
+  </ul>
+
+<h2>Arguments to commands</h2>
+  <ul>
+    <li>Type <kbd>C</kbd>-<kbd>u</kbd> plus the argument before typing the actual command. Since they go before the actual command they are called: <em>Prefix Arguments</em>.</li>
+    <li><code>-</code> is for negative arguments like -1</li>
+    <li>It is possible to cancel current input with <kbd>C</kbd>-g</li>
+  </ul>
+
+<h2>Inserting control sequences</h2>
+  <ul>
+    <li><kbd>C</kbd>-<kbd>q</kbd> <code>quoted-insert</code> inserts control sequences like ESC, C, M into the text rather than recognize them as commands. Three digits octal ASCII code is also possible.</li>
+  </ul>
+
+<h2>Moving around</h2>
+  <p>moving through text highly depends on the mode emacs is in (C mode, text mode, etc). Note: The <em>f</em> for forward and <em>b</em> for backward mnemonic will reoccur. Also <em>a</em> for beginning and <em>e</em> for end of things.</p>
+  <ul>
+    <li><kbd>C</kbd>-<kbd>f</kbd> <code>forward-char</code>. Next character (to the right).</li>
+    <li><kbd>C</kbd>-<kbd>b</kbd> <code>backward-char</code>. Previous character (to the left).</li>
+    <li><kbd>M</kbd>-<kbd>f</kbd> <code>forward-word</code>. Next word.</li>
+    <li><kbd>M</kbd>-<kbd>b</kbd> <code>backward-word</code>. Previous word.</li>
+  </ul>
+  <ul>
+    <li><kbd>C</kbd>-<kbd>n</kbd> <code>next-line</code>. Next line (go down).</li>
+    <li><kbd>C</kbd>-<kbd>p</kbd> <code>previous-line</code>. Previous line (go up).</li>
+  </ul>
+  <ul>
+    <li><kbd>C</kbd>-<kbd>a</kbd> <code>beginning-of-line</code>. Beginning of current line.</li>
+    <li><kbd>C</kbd>-<kbd>e</kbd> <code>end-of-line</code>. End of current line.</li>
+  </ul>
+  <p>Sentences</p>
+  <ul>
+    <li><kbd>M</kbd>-<kbd>a</kbd> <code>backward-sentence</code>. Beginning of current sentence.</li>
+    <li><kbd>M</kbd>-<kbd>e</kbd> <code>forward-sentence</code>. End of current sentenceMoves to the end of the current sentence.</li>
+  </ul>
+  <p>Paragraphs</p>
+  <ul>
+    <li><kbd>M</kbd>-<kbd>{</kbd> <code>backward-paragraph</code>. Beginning of current paragraph.</li>
+    <li><kbd>M</kbd>-<kbd>}</kbd> <code>forward-paragraph</code>. End of current paragraph.</li>
+  </ul>
+  <p>Pages</p>
+  <ul>
+    <li><kbd>C</kbd>-<kbd>x</kbd> <kbd>[</kbd> <code>backward-page</code>. Beginning of current page.</li>
+    <li><kbd>C</kbd>-<kbd>x</kbd> <kbd>]</kbd> <code>forward-page</code>. End of current paragraph.</li>
+  </ul>
+  <p>Pages are separated by formfeed characters (<kbd>C</kbd>-<kbd>l</kbd>) in most modes.</p>
+  <p>Buffers</p>
+  <ul>
+    <li><kbd>M</kbd>-<<kbd>l</kbd> <code>beginning-of-bufer</code>. Start of the buffer.</li>
+    <li><kbd>M</kbd>-<kbd>></kbd> <code>end-of-buffer</code>. End of the buffer.</li>
+  </ul>
+
+<h2>Deleting Killing and Yanking</h2>
+  <p>First, some definitions...</p>
+  <ul>
+    <li>Delete: is simply the deletion we know.</li>
+    <li>Kill: is like cutting. Deleted text is saved in the <em>kill ring</em> for future usage. When killing the <em>kill ring</em> acts like a FIFO stack. Its maximum depth is defined by <code>kill-ring-max</code> variable (defaults to 30).</li>
+    <li>Yank: is pulling some text from the <em>kill ring</em>. When yanking things back the <em>kill ring</em> acts like a ring (you can yanking around).</li>
+  </ul>
+  <ul>
+    <li><kbd>C</kbd>-<kbd>d</kbd> <code>delete-char</code> deletes char to the right.</li>
+    <li><kbd>DEL</kbd> <code>delete-backward-char</code> deletes char to the left.</li>
+    <li><kbd>M</kbd>-<kbd>d</kbd> <code>kill-word</code> kills word to the right.</li>
+    <li><kbd>M</kbd>-<kbd>DEL</kbd> <code>backward-kill-word</code> kills word to the left.</li>
+  </ul>
+  <ul>
+    <li><kbd>C</kbd>-<kbd>k</kbd> <code>kill-line</code>. Kills to the end of the current line, not including the newline.</li>
+    <li><kbd>C</kbd>-<kbd>u</kbd> <kbd>0</kbd> <kbd>C</kbd>-k <code>kill-line</code>. Kills to the beginning of the current line, not including the newline.</li>
+    <li><kbd>C</kbd>-<kbd>u</kbd> <kbd>-1</kbd> <kbd>C</kbd>-k Kills to the beginning of the line including the newline before the line as well.</li>
+  </ul>
+  <p>Remember that <kbd>C</kbd>-u is for giving prefix arguments, in this case 0 and/or 1, to the command which in this case is <kbd>C</kbd>-k <code>kill line</code>.</p>
+  <p>Sentences</p>
+  <ul>
+    <li><kbd>M</kbd>-<kbd>k</kbd> <code>kill-sentence</code>. Kills to the end of current sentence, including any newline within the sentence.</li>
+    <li><kbd>C</kbd>-<kbd>u</kbd> <kbd>-1</kbd> <kbd>M</kbd>-<kbd>k</kbd> <code>kill-sentence</code>. Kills to the beginning of the current sentence, including any newlines within the sentence.</li>
+  </ul>
+  <h2>Yanking</h2>
+  <ul>
+    <li><kbd>C</kbd>-<kbd>y</kbd> <code>yank</code> Yanks what is in the kill-ring. Remember the kill-ring acts like a ring when yanking so we can move to the next spot with M-y and replace the just yanked text. Subsequents <kbd>M</kbd>-<kbd>y</kbd> will work until any other command is executed (insertion, anything) breaking the cycle.</li>
+  </ul>
+
+<h2>Copying and Moving Text</h2>
+
+<p>There is no extra commands to learn, copying can be done by killing and immediately yanking. Moving is equivalent to killing, moving the cursor and yanking.</p>
+
+<h2>Search and Replace</h2>
+  <ul>
+    <li><kbd>C</kbd>-<kbd>s</kbd> <code>isearch-forwards</code> searches the text forwards incrementally.</li>
+    <li><kbd>C</kbd>-<kbd>r</kbd> <code>isearch-backward</code> searches the text backwards incrementally.</li>
+  </ul>
+  <p>To go to the next result press <kbd>C</kbd>-<kbd>s</kbd> and <kbd>C</kbd>-<kbd>r</kbd> to go back. When searching backwards it is the opposite. To stop the search press ret.</p>
+  <p>TODO: word search</p>
+  <p>TODO: regex search</p>
+
+<h2>Replacement</h2>
+  <ul>
+    <li><kbd>M</kbd>-<kbd>%</kbd> <code>query-replace</code> Prompts for a couple of strings (target and replacement) for the replacement and in each iteration prompts for an action. Some options are:
+      <ul>
+        <li><kbd>SPC</kbd> : Perform this replacement.</li>
+        <li><kbd>DEL</kbd> : Don't perform this replacement.</li>
+        <li><kbd>RET</kbd> : Terminate <code>query-replace</code> without performing this replacement.</li>
+        <li><kbd>ESC</kbd> : Same as <kbd>RET</kbd>.</li>
+        <li><kbd>.</kbd> : Perform this replacement but then terminate the <code>query-replace</code>.</li>
+        <li><kbd>!</kbd> : Perform this replacement and all the rest in the buffer without querying (i.e. unconditionally).</li>
+      </ul>
+    </li>
+  </ul>
+  <p>TODO: Regex search and replace</p>
+  <ul>
+    <li><code>replace-string</code> Replaces unconditionally all occurrences.</li>
+    <li><code>replace-regexp</code> Replaces unconditionally all occurrences.</li>
+    <li><code>query-replace-regexp</code> Prompts an action for each occurrence.</li>
+  </ul>
+  </body>
+</html>
