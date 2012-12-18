@@ -1,0 +1,6 @@
+.gitignore  
+opencv/CMakeCache.txt
+opencv/CMakeFiles/
+opencv/DisplayImage
+opencv/cmake_install.cmake
+opencv/Makefile
