@@ -1,0 +1,18 @@
+LOCAL_PATH:=$(call my-dir)
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES:=\
+	ion.cpp
+
+#LOCAL_C_INCLUDES:=\
+#LOCAL_STATIC_LIBRARIES:=\
+
+LOCAL_SHARED_LIBRARIES:=\
+	liblog
+
+LOCAL_MODULE_TAGS := optional
+
+LOCAL_MODULE:=ion_test
+
+include $(BUILD_EXECUTABLE)
+
