@@ -294,3 +294,10 @@ x
           (cdr (assoc node net))))
 
 (eq 3 3)
+
+(setf arr (make-array '(2 3) :initial-element nil))
+(aref arr 0 0)
+(setf (aref arr 0 0) 'b)
+(aref arr 0 0)
+;;#2a((b nil nil) (nil nil nil))
+
