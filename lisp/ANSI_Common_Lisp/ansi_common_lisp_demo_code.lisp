@@ -454,3 +454,22 @@ x
 (point-x p)
 p
 
+(defstruct polemic
+  (type (progn
+		  (format t "What kind of polemic was it?")
+		  (read)))
+  (effect nil))
+(make-polemic)
+
+(defstruct (point (:conc-name p)
+				  (:print-function print-point))
+  (x 0)
+  (y 0))
+(defun print-point (p stream depth)
+  (format stream "#<~A, ~A>" (px p) (py p)))
+
+(make-point)
+
+;; Binary Search Tree(BST)
+
+
