@@ -1,4 +1,4 @@
-;; Triple the value of a number
+        ;; Triple the value of a number
 (defun triple (X)
   "Compute three times X."  ; Inline comments can
   (* 3 X))                  ; be placed here.
@@ -456,13 +456,13 @@ p
 
 (defstruct polemic
   (type (progn
-		  (format t "What kind of polemic was it?")
-		  (read)))
+          (format t "What kind of polemic was it?")
+          (read)))
   (effect nil))
 (make-polemic)
 
 (defstruct (point (:conc-name p)
-				  (:print-function print-point))
+                  (:print-function print-point))
   (x 0)
   (y 0))
 (defun print-point (p stream depth)
@@ -471,5 +471,481 @@ p
 (make-point)
 
 ;; Binary Search Tree(BST)
+(defstruct (node (:print-function
+                   (lambda (n s d)
+                     (format s "#<~A>" (node-elt n)))))
+  elt (l nil) (r nil))
 
+(defun bst-insert (obj bst <)
+  (if (null bst)
+    (make-node :elt obj)
+    (let ((elt (node-elt bst)))
+      (if (eql obj elt)
+        bst
+        (if (funcall < obj elt)
+          (make-node
+            :elt elt
+            :l (bst-insert obj (node-l bst) <)
+            :r (node-r bst))
+          (make-node
+            :elt elt
+            :r (bst-insert obj (node-r bst) <)
+            :l (node-l bst)))))))
+
+(defun bst-find (obj bst <)
+  (if (null bst)
+    nil
+    (let ((elt (node-elt bst)))
+      (if (eql obj elt)
+        bst
+        (if (funcall < obj elt)
+          (bst-find obj (node-l bst) <)
+          (bst-find obj (node-r bst) <))))))
+
+(defun bst-min (bst)
+  (and bst
+       (or (bst-min (node-l bst)) bst)))
+
+(defun bst-max (bst)
+  (and bst
+       (or (bst-max (node-r bst)) bst)))
+
+(setq str (copy-seq "0123456789"))
+(elt str 6)
+
+(setf (elt str 0) #\#)
+str
+
+(setf nums nil)
+(dolist (x '(5 8 4 2 1 9 6 7 3))
+  (setf nums (bst-insert x nums #'<)))
+
+;; Hash Table
+(setf ht (make-hash-table))
+(gethash 'color ht)
+(setf (gethash 'color ht) 'red)
+(gethash 'color ht)
+(setf (gethash 'shape ht) 'spherical
+	  (gethash 'size ht) 'giant)
+(maphash #' (lambda (k v)
+			  (format t "~A = ~A~%" k v))
+			ht)
+
+;; Chapter 5
+;; progn
+(progn
+  (format t "a")
+  (format t "b")
+  (+ 11 12))
+
+;; block
+(block head
+  (format t "Here we go.")
+  (return-from head 'idea)
+  (format t "We'll never see this."))
+
+(block nil
+  (return 27))
+
+(dolist (x '(a b c d e))
+  (format t "~A " x)
+  (if (eql x 'c)
+	  (return 'done)))
+
+(defun read-integer (str)
+  (let ((accum 0))
+	(dotimes (pos (length str))
+	  (let ((i (digit-char-p (char str pos))))
+		(if i
+			(setf accum (+ (* accum 10) i))
+			(return-from read-integer nil))))
+	accum))
+
+(tagbody
+   (setf x 0)
+   top
+   (setf x (+ x 1))
+   (format t "~A " x)
+   (if (< x 10) (go top)))
+
+(let ((x 7)
+	  (y 2))
+  (format t "Number")
+  (+ x y))
+
+((lambda (x) (+ x 1)) 3)
+
+;;------------------
+(let ((x 2)
+	  (y (+ x 1)))
+  (+ x y))
+((lambda (x y) (+ x y)) 2
+ (+ x 1))
+
+;;------------------
+(let* ((x 2)
+	   (y (+ x 1)))
+  (+ x y))
+
+(let ((x 1))
+  (let ((y (+ x 1)))
+	(+ x y)))
+
+(destructuring-bind (w (x y) . z) '(a (b c) d e)
+  (list w x y z))
+
+;; Conditionals
+(when (oddp that)
+  (format t "Hmm, that's odd.")
+  (+ that 1))
+;; It's equal to the following
+(if (oddp that)
+	(progn
+	  (format t "Hmm, that's odd.")
+	  (+ that 1)))
+
+(defun our-member (obj lst)
+  (if (atom lst)
+	  nil
+	  (if (eql (car lst) obj)
+		  lst
+		  (our-member obj (cdr lst)))))
+
+(defun our-member (obj lst)
+  (cond ((atom lst) nil)
+		((eql (car lst) obj) lst)
+		(t (our-member obj (cdr lst)))))
+
+(cond (99))
+
+(defun month-length (mon)
+  (case mon
+	((jan mar may jul aug oct dec) 31)
+	((apr jun sept nov) 30)
+	(feb (if(leap-year) 29 28))
+	(otherwise "unknown month")))
+
+;; Iteration
+(defun show-squares (start end)
+  (do ((i start (+ i 1)))
+	  ((> i end) 'done)
+	(format t "~A ~A~%" i (* i i))))
+
+(let ((x 'a))
+  (do ((x 1 (+ x 1))
+	   (y x x))
+	  ((> x 5))
+	(format t "(~A ~A)  " x y)))
+
+(do* ((x 1 (+ x 1))
+	  (y x x))
+	 ((> x 5))
+  (format t "(~A ~A)" x y))
+
+(dolist (x '(a b c d) 'done)
+  (format t "~A " x))
+
+(dotimes (x 5 x)
+  (format t "~A " x))
+
+(mapc #' (lambda (x y)
+		   (format t "~A ~A  " x y))
+		 '(hip flip slip)
+		 '(hop flop slop))
+
+(values 'a nil (+ 2 4))
+((lambda () ((lambda () (values 1 2)))))
+
+(values)
+(let ((x (values)))
+  x)
+
+;;; multiple-value-bind
+(multiple-value-bind (x y z) (values 1 2 3)
+  (list x y z))
+(multiple-value-bind (x y z) (values 1 2)
+  (list x y z))
+(multiple-value-bind (s m h) (get-decoded-time)
+  (format t "~A:~A:~A" h m s))
+(multiple-value-call #'+ (values 1 2 3))
+(multiple-value-list (values 'a 'b 'c))
+
+;;; Aborts
+(defun super ()
+  (catch 'abort
+	(sub)
+	(format t "We'll never see this.")))
+(defun sub ()
+  (throw 'abort 99))
+
+(progn
+  (error "Oops!")
+  (format t "After the error."))
+
+;;; Example: Date Arithmetic
+(setf mon '(31 28 31 30 31 30 31 31 30 31 30 31))
+(apply #'+ mon)
+(setf nom (reverse mon))
+(setf sums (maplist #'(lambda (x)
+						(apply #'+ x))
+					nom))
+
+(defconstant month
+    #(0 31 59 90 120 151 181 212 243 273 304 334 365))
+(defconstant yzero 2000)
+(defun leap? (y)
+  (and (zerop (mod y 4))
+	   (or (zerop (mod y 400))
+		   (not (zerop (mod y 100))))))
+
+;;; Chapter 10
+;;; Functions
+(fboundp '+)
+(fboundp '-)
+(symbol-function '+)
+(setf (symbol-function 'add2)
+	    #'(lambda (x) (+ x 2)))
+(add2 1)
+
+(defun add3 (x) (+ x 2))
+(add3 1)
+
+
+(defun primo (lst) (car lst))
+(defun (setf primo) (val lst)
+  (setf (car lst) val))
+(let ((x (list 'a 'b 'c)))
+  (setf (primo x) 480)
+  x)
+
+(defun foo (x)
+  "Implements an enhanced paradigm of diversity"
+  x)
+(documentation 'foo 'function)
+
+;; Local Functions
+(labels ((add10 (x) (+ x 10))
+		 (consa (x) (cons 'a x)))
+  (consa (add10 3)))
+
+(labels ((len (lst)
+		   (if (null lst)
+			   0
+			   (+ (len (cdr lst)) 1))))
+  (len '(a b c)))
+
+;; iterator
+(do ((x a (b x))
+	 (y c (d y)))
+	((test x y) (z x y))
+  (f x y))
+;; equal to
+(labels ((rec (x y)
+		   (cond ((test x y)
+				  (z x y))
+				 (t
+				  (f x y)
+				  (rec (b x) (d y))))))
+  (rec a c))
+
+;;; Parameter Lists
+(defun our-funcall (fn &rest args)
+  (apply fn args))
+
+;;; Optional parameters
+(defun philosoph (thing &optional property)
+  (list thing 'is property))
+(philosoph 'death)
+
+(defun philosoph (thing &optional (property 'fun))
+  (list thing 'is property))
+(philosoph 'death)
+
+;;; Keyword parameters
+(defun keylist (a &key x y z)
+  (list a x y z))
+(keylist 1 :y 2)
+
+(defun our-adjoin (obj lst &rest args)
+  (if (apply #'member obj lst args)
+	  lst
+	  (cons obj lst)))
+
+;;; Utilities
+(defun single? (lst)
+  (and (consp lst) (null (cdr lst))))
+
+(defun append1 (lst obj)
+  (append lst (list obj)))
+
+(defun map-int (fn n)
+  (let ((acc nil))
+	(dotimes (i n)
+	  (push (funcall fn i) acc))
+	(nreverse acc)))
+
+(defun filter (fn lst)
+  (let ((acc nil))
+	(dotimes (x lst)
+	  (let ((val (funcall fn x)))
+		(if val (push val acc))))
+	(nreverse acc)))
+
+(defun most (fn lst)
+  (if (null lst)
+	  (values nil nil)
+	  (let* ((wins (car lst))
+			 (max (funcall fn wins)))
+		(dolist (obj (cdr lst))
+		  (let ((score (funcall fn obj)))
+			(when (> score max)
+			  (setf wins obj
+					max score))))
+		(values wins max))))
+
+;;; Test utilities
+(single? '(a))
+(append1 '(a b c) 'd)
+(map-int #'identity 10)
+(map-int #'(lambda (x) (random 100))
+		 10)
+(filter #'(lambda (x)
+			(and (evenp x) (+ x 10)))
+		'(1 2 3 4 5 6 7))
+(most #'length '((a b) (a b c) (a)))
+
+;;; Closures
+(defun combiner (x)
+  (typecase x
+	(number #'+)
+	(list #'append)
+	(t #'list)))
+(defun combine (&rest args)
+  (apply (combiner (car args))
+		 args))
+;;; Test combine
+(combine 2 3)
+(combine '(a b) '(c d))
+
+(setf fn (let ((i 3))
+		   #'(lambda (x) (+ x i))))
+(funcall fn 2)
+
+(defun add-to-list (num lst)
+  (mapcar #'(lambda (x)
+			  (+ x num))
+		  lst))
+(defun make-adder (n)
+  #'(lambda (x)
+	  (+ x n)))
+(setf add3 (make-adder 3))
+(funcall add3 2)
+(setf add27 (make-adder 27))
+(funcall add27 2)
+
+(let ((counter 0))
+  (defun reset ()
+	(setf counter 0))
+  (defun stamp ()
+	(setf counter (+ counter 1))))
+(list (stamp) (stamp) (reset) (stamp))
+
+;;; complement
+(mapcar (complement #'oddp)
+		'(1 2 3 4 5 6))
+;;; our-complement
+(defun our-complement (f)
+  #'(lambda (&rest args)
+	  (not (apply f args))))
+(mapcar (our-complement #'evenp)
+		'(1 2 3 4 5 6))
+
+;;; Function Builders
+;;; Dylan is the combination for Common Lisp and Scheme.
+(defun compose (&rest fns)
+  (destructuring-bind (fn1 . rest) (reverse fns)
+	#'(lambda (&rest args)
+		(reduce #'(lambda (v f) (funcall f v))
+				rest
+				:initial-value (apply fn1 args)))))
+(defun disjoin (fn &rest fns)
+  (if (null fns)
+	  fn
+	  (let ((disj (apply #'disjoin fns)))
+		#'(lambda (&rest args)
+			(or (apply fn args) (apply disj args))))))
+(defun conjoin (fn &rest fns)
+  (if (null fns)
+	  fn
+	  (let ((conj (apply #'conjoin fns)))
+		#'(lambda (&rest args)
+			(and (apply fn args) (apply conj args))))))
+(defun curry (fn &rest args)
+  #'(lambda (&rest args2)
+	  (apply fn (append args args2))))
+(defun rcurry (fn &rest args)
+  #'(lambda (&rest args2)
+	  (apply fn (append args2 args))))
+(defun always (x) #'(lambda (&rest args) x))
+
+(compose #'a #'b #'c)
+#'(lambda (&rest args) (a (b (apply #'c args))))
+(mapcar (compose #'list #'round #'sqrt)
+				 '(4 9 16 25))
+
+(mapcar (disjoin #'integerp #'symbolp)
+		'(a "a" 2 3))
+(mapcar (conjoin #'integerp #'symbolp)
+		'(a "a" 2 3))
+(curry #'+ 3)
+(rcurry #'+ 3)
+(funcall (curry #'- 3) 2)
+(funcall (rcurry #'- 3) 2)
+
+;;; Dynamic Scope
+(let ((x 10))
+  (defun foo ()
+	x))
+(let ((x 20)) (foo))
+
+(let ((x 10))
+  (defun foo ()
+	(declare (special x))
+	x))
+(let ((x 20))
+  (declare (special x))
+  (foo))
+
+(setf x 30)
+(foo)
+
+(let ((*print-base* 16))
+  (print 32))
+
+;;; Compilation
+(defun foo (x) (+ x 1))
+(compiled-function-p #'foo)
+(compile 'foo)
+
+(defun make-adder (x) (+ x 100))
+(compile 'make-adder)
+(compiled-function-p (make-adder 2))
+
+;; 6.9 Using Recursion
+(defun fib (n)
+  (if (<= n 1)
+	  1
+	  (+ (fib (- n 1))
+		 (fib (- n 2)))))
+(fib 10)
+
+(defun fib (n)
+  (do ((i n (- i 1))
+	   (f1 1 (+ f1 f2))
+	   (f2 1 f1))
+	  ((<= i 1) f1)))
+(fib 10)
+
+;;; Chapter 7. IO
+(setf path (make-pathname :name "myfile"))
 
