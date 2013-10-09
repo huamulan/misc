@@ -948,4 +948,249 @@ str
 
 ;;; Chapter 7. IO
 (setf path (make-pathname :name "myfile"))
+(setf str (open path :direction :output
+				:if-exists :supersede))
+(format str "Something~%")
+(close str)
+
+(setf str (open path :direction :input))
+(read-line str)
+(close str)
+
+(with-open-file (str path :direction :output
+					 :if-exists :supercede)
+  (format str "Something~%"))
+
+(progn
+  (format t "Please enter your name: ")
+  (read-line))
+
+(defun pseudo-cat (file)
+  (with-open-file (str file :direction :input)
+	(do ((line (read-line str nil 'eof)
+			   (read-line str nil 'eof)))
+		((eql line 'eof))
+	  (format t "~A~%" line))))
+
+(read)
+
+;;; Output
+(prin1 "Hello")
+(princ "Hello")
+;;(terpri "Hello")
+
+(format nil "Dear ~A, ~% Our records indicate..."
+		"Mr. Malatesta")
+
+(format nil "~10,2,0,'*,' F" 26.12345)
+(format nil "~,2,,,F" 26.12345)
+(format nil "~,2F" 26.12345)
+
+;;; String Substitution
+(defstruct buf
+  vec (start -1) (used -1) (new -1) (end -1))
+
+(defun bref (buf n)
+  (svref (buf-vec buf)
+         (mod n (length (buf-vec buf)))))
+
+(defun (setf bref) (val buf n)
+  (setf (svref (buf-vec buf)
+               (mod n (length (buf-vec buf))))
+        val))
+
+(defun new-buf (len)
+  (make-buf :vec (make-array len)))
+
+(defun buf-insert (x b)
+  (setf (bref b (incf (buf-end b))) x))
+
+(defun buf-pop (b)
+  (prog1
+    (bref b (incf (buf-start b)))
+    (setf (buf-used b) (buf-start b)
+          (buf-new  b) (buf-end   b))))
+
+(defun buf-next (b)
+  (when (< (buf-used b) (buf-new b))
+    (bref b (incf (buf-used b)))))
+
+(defun buf-reset (b)
+  (setf (buf-used b) (buf-start b)
+        (buf-new  b) (buf-end   b)))
+
+(defun buf-clear (b)
+  (setf (buf-start b) -1 (buf-used  b) -1
+        (buf-new   b) -1 (buf-end   b) -1))
+
+(defun buf-flush (b str)
+  (do ((i (1+ (buf-used b)) (1+ i)))
+      ((> i (buf-end b)))
+    (princ (bref b i) str)))
+
+;;; Macro Characters
+(car (read-from-string "'a"))
+
+(let ((*print-array* t))
+  (vectorp (read-from-string (format nil "~S"
+									 (vector 1 2)))))
+
+;;; Chapter 8: Symbols
+(symbol-name 'abc)
+(eql 'abc 'Abc)
+(CaR '(a b c))
+(list '|Lisp 1.5| '|| '|abc| '|ABC|)
+(list '|Lisp 1.5| '|| '|abc| '|ABC| '|ABc| '||)
+;; Property Lists
+(get 'alizarin 'color)
+(setf (get 'alizarin 'color) 'red)
+(get 'alizarin 'color)
+(setf (get 'alizarin 'transparency) 'high)
+(symbol-plist 'alizarin)
+
+(intern "RANDOM-SYMBOL")
+
+;; Multiple packages
+(defpackage "MY-APPLICATION"
+  (:use "COMMON-LISP" "MY-UTILITIES")
+  (:nicknames "APP")
+  (:export "WIN" "LOSE" "DRAW"))
+(in-package my-application)
+
+(defun noise (animal)
+  (case animal
+	(:dog :woof)
+	(:cat :meeow)
+	(:pig :oink)))
+
+;; Symbols and variables
+;; Example: Random Text
+(defparameter *words* (make-hash-table :size 10000))
+(defconstant maxword 100)
+(defun read-text (pathname)
+  (with-open-file (s pathname :direction :input)
+	(let ((buffer (make-string maxword))
+		  (pos 0))
+	  (do ((c (read-char s nil :eof)
+			  (read-char s nil :eof)))
+		  ((eql c :eof))
+		(if (or (alpha-char-p c) (char= c #\'))
+			(progn
+			  (setf (aref buffer pos) c)
+			  (incf pos))
+			(progn
+			  (unless (zerop pos)
+				(see (intern (string-downcase
+							  (subseq buffer 0 pos))))
+				(setf pos 0))
+			  (let ((p (punc c)))
+				(if p (see p)))))))))
+(defun punc (c)
+  (case c
+	(#\. '|.|) (#\, '|,|) (#\; '|;|)
+	    (#\! '|!|) (#\? '|?|) ))
+
+(let ((prev '|.|))
+  (defun see (symb)
+	(let ((pair (assoc symb (gethash prev *words*))))
+	  (if (null pair)
+		  (push (cons symb 1) (gethash prev *words*))
+		  (incf (cdr pair))))
+	(setf prev symb)))
+
+(defun generate-text (n &optional (prev '|.|))
+  (if (zerop n)
+	  (terpri)
+	  (let ((next (random-next prev)))
+		(format t "~A " next)
+		(generate-text (1- n) next))))
+
+(defun random-next (prev)
+  (let* ((choices (gethash prev *words*))
+		 (i (random (reduce #'+ choices
+							:key #'cdr))))
+	(dolist (pair choices)
+	  (if (minusp (decf i (cdr pair)))
+		  (return (car pair))))))
+
+;;; Chapter 9: Digit
+(print 2001)
+(print 253.72)
+(print 2.5372e2)
+(print 2/3)
+;(print #c(a b))
+(list (ratiop 2/2) (complexp #c(1 0)))
+(mapcar #'float '(1 2/3 .5))
+(truncate 1.3)
+
+(defun palindrome? (x)
+  (let ((mid (/ (length x) 2)))
+	(equal (subseq x 0 (floor mid))
+		   (reverse (subseq x (ceiling mid))))))
+(floor 1.5)
+(defun our-truncate (n)
+  (if (> n 0)
+	  (floor n)
+	  (ceiling n)))
+(our-truncate 10.4)
+(mapcar #'round '(-2.5 -1.5 1.5 2.5))
+(mapcar #'signum '(-2 -0.0 0.0 0 .5 3))
+
+;; 9.3 Comparison
+(= 1 1.0)
+(eql 1 1.0)
+(list (minusp -0.0) (zerop -0.0))
+(list (max 1 2 3 4 5) (min 1 2 3 4 5))
+
+;; 9.4 Arithmatic
+(1+ 2)
+;; Attention: (1- x) means x-1 instead of 1-x
+(1- 2)
+(/ 365 12)
+(float 365/12)
+
+;; 9.5 Exponentiation
+(expt 2 5)
+(log 32 2)
+(exp 2)
+(expt 27 1/3)
+(sqrt 4)
+
+;; 9.6 Trigometric Functions
+(let ((x (/ pi 4)))
+  (list (sin x) (cos x) (tan x)))
+
+;; 9.7 Representations
+(values most-positive-fixnum most-negative-fixnum)
+(typep 1 'fixnum)
+(typep (1+ most-positive-fixnum) 'bignum)
+(* most-positive-long-float 10)
+
+;; 9.8 Example: Ray-Tracing
+;; Just ignore.
+
+;;; Chapter 10 Macros
+;; https://acl.readthedocs.org/en/latest/zhCN/ch10-cn.html
+(eval '(+ 1 2 3))
+(eval '(format t "Hello"))
+(defun our-toplevel ()
+  (do ()
+	  (nil)
+	(format t "~%> ")
+	(print (eval (read)))))
+
+;; REPL(read-eval-print loop)
+(coerce '(lambda (x) x) 'function)
+(compile nil '(lambda (x) (+ x 2)))
+
+(defmacro nil! (x)
+  (list 'setf x nil))
+(macroexpand-1 '(nil! x))
+(lambda (expr)
+  (apply #'(lambda (x) (list 'setf x nil))
+		 (cdr expr)))
+
+;; Backquote
+`(a b c)
+'(a b c)
 
